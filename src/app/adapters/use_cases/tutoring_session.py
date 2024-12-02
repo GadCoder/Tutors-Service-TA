@@ -122,6 +122,10 @@ class TutoringSessionService(TutoringSessionServiceInterface):
         self, teacher_code: str
     ) -> Union[ResponseSuccess, ResponseFailure]:
         with self.uow:
+            teacher_exist = utils.teacher_exists(teacher_code=teacher_code)
+            if not teacher_exist:
+                return _handle_response_failure(teacher_code=teacher_code)
+
             tutoring_sessions = (
                 self.uow.tutoring_sessions.get_tutoring_sessions_for_teacher(
                     teacher_code
